@@ -56,7 +56,6 @@ if __name__ == '__main__':
     config.root = arg.root
     s = scan_file_dirs(arg.root)
     s = filter_file_dirs(s)
-    print(s)
     files = s
 
     app.run(host=arg.host, port=arg.port)

@@ -99,7 +99,8 @@ def filter_file_dirs(ps: list[Path]):
             is_dir = True
         if not ok:
             continue
-        archives[str(p)] = Manga(p, file_list, is_dir, mime)
+        stat = os.stat(abs_p)
+        archives[str(p)] = Manga(p, file_list, is_dir, mime, stat.st_ctime)
     return archives
 
 
