@@ -41,10 +41,8 @@ def image(uid, image):
     resp = make_response(image_binary)
     k = filetype.guess(image_binary)
     resp.headers.set('Content-Type', k.mime)
-    # resp.headers.set(
-    #     'Content-Disposition', 'attachment', filename=image)
+    resp.headers.set('cache-control', 'max-age=31536000')
     return resp
-    # return send_file(io.BytesIO(image_binary), mimetype=k.mime, as_attachment=True)
 
 
 if __name__ == '__main__':

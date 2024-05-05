@@ -49,7 +49,7 @@ FILE_TYPE_IMPL = {
 }
 
 
-def filter_file_dirs(ps: list[Path]):
+def filter_file_dirs(ps: list[Path]) -> list[Manga]:
     def filter_file(p: Path) -> (bool, list[str], str):
         k = filetype.guess(p)
         if k.mime in FILE_TYPE_IMPL.keys():

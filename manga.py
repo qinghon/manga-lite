@@ -25,6 +25,16 @@ class Manga():
         elif self.is_dir:
             return get_dir_file(self._p, file)
 
+    @property
+    def get_cover_name(self) -> str:
+        for x in self._file_list:
+            if x.__class__ == str and  "cover" in x:
+                return x
+        return self._file_list[0]
+
+    def get_cover(self) -> bytes:
+        return self.get_file(self.get_cover_name)
+
     def file_list(self):
         return self._file_list
 

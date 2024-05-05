@@ -9,13 +9,17 @@
     <table id="mangatable">
         <thead>
         <tr>
-            <th onclick="sortTable(0)" >名字</th>
-            <th onclick="sortTable(1)" >创建时间</th>
+            <th>封面</th>
+            <th onclick="sortTable(1)" >名字</th>
+            <th onclick="sortTable(2)" >创建时间</th>
         </tr>
         </thead>
         <tbody>
         {% for file in files %}
             <tr>
+                <td>
+                    <img src="/image/{{ file }}/{{ files[file].get_cover_name }}" alt="cover" class="img" loading="lazy" style="max-width: 6em;"></img>
+                </td>
                 <td>
                     <h2><a href="/manga/{{ file }}" datetime="{{ files[file].ctime }}">{{ file }} </a></h2>
                 </td>
@@ -28,23 +32,13 @@
         </tbody>
     </table>
 </body>
-
-<script type="text/javascript">
-    var items = document.getElementsByClassName("time");
-    for (i = 0; i < items.length; i++) {
-        d = new Date(items[i].innerHTML.trim() * 1000)
-        const formattedDate = d.toLocaleString();
-        items[i].innerHTML = formattedDate
-    }
-</script>
-
 <script>
 function sortTable(n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   table = document.getElementById("mangatable");
   switching = true;
-  // 设置升序排列
-  dir = "asc";
+  // 设置降序排列
+  dir = "desc";
   /* 设置一个循环语句 */
   while (switching) {
     // 设置循环结束标记
@@ -89,5 +83,15 @@ function sortTable(n) {
   }
 }
 
+</script>
+
+<script type="text/javascript">
+    var items = document.getElementsByClassName("time");
+    for (i = 0; i < items.length; i++) {
+        d = new Date(items[i].innerHTML.trim() * 1000)
+        const formattedDate = d.toLocaleString();
+        items[i].innerHTML = formattedDate
+    }
+    sortTable(2);
 </script>
 </html>
