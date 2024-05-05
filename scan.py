@@ -1,5 +1,6 @@
 import dataclasses
 import os
+import tarfile
 from pathlib import Path
 import zipfile
 import filetype
@@ -44,28 +45,56 @@ def zip_get_filelist(p: Path) -> (bool, list[str]):
         return True, file_list
 
 
+def tar_get_filelist(p: Path) -> (bool, list[str]):
+    if not tarfile.is_tarfile(p):
+        return False, []
+    with tarfile.open(p) as t:
+        return True, t.getnames()
+
+
 FILE_TYPE_IMPL = {
-    'application/zip': zip_get_filelist
+    'application/zip': zip_get_filelist,
+    'application/tar': tar_get_filelist
 }
 
 
 def filter_file_dirs(ps: list[Path]) -> list[Manga]:
+    def filter_file_list(file_list: list[str]) -> list[str]:
+        image_cnt = 0
+        for f in file_list:
+            extension = os.path.splitext(f)[-1]
+            if extension:
+                extension = extension[1:]
+            if extension in support_image_type:
+                image_cnt += 1
+                if image_cnt >= images_min_num:
+                    return file_list
+        return []
+
     def filter_file(p: Path) -> (bool, list[str], str):
         k = filetype.guess(p)
+        print(k.mime)
         if k.mime in FILE_TYPE_IMPL.keys():
             ok, file_list = FILE_TYPE_IMPL[k.mime](p)
-            image_cnt = 0
-            for f in file_list:
-                extension = os.path.splitext(f)[-1]
-                if extension:
-                    extension = extension[1:]
-                if extension in support_image_type:
-                    image_cnt += 1
-                    if image_cnt >= images_min_num:
-                        return True, file_list, k.mime
+            if not ok:
+                return False, [], k.mime
+            file_list_ = filter_file_list(file_list)
+            if len(file_list_) == 0:
+                return False, file_list_, k.mime
+            else:
+                return True, file_list_, k.mime
+        elif str(p).endswith(".tgz") or str(p).endswith(".tar.gz") or str(p).endswith(".tar.xz") or str(p).endswith(
+                ".tar.bz2") or str(p).endswith(".txz"):
+            ok, file_list = tar_get_filelist(p)
+            print(ok, file_list)
+            if not ok:
+                return False, [], 'unknown'
+            file_list_ = filter_file_list(file_list)
+            if len(file_list_) == 0:
+                return False, file_list_, 'application/tar'
+            else:
+                return True, file_list_, 'application/tar'
 
-            if image_cnt < images_min_num:
-                return False, file_list, k.mime
         else:
             return False, [], k.mime
 

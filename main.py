@@ -24,7 +24,7 @@ def index():
 @app.route('/manga/<uid>')
 def manga(uid):
     uid = unquote(uid)
-    print(uid, uid in files, type(uid), files.keys())
+    # print(uid, uid in files, type(uid), files.keys())
 
     if uid in files:
         return render_template('manga.html', file=uid, images=files[uid].file_list())
@@ -38,9 +38,13 @@ def image(uid, image):
         abort(404)
     m = files[uid]
     image_binary = m.get_file(image)
+    if image_binary is None:
+        abort(500)
+
     resp = make_response(image_binary)
     k = filetype.guess(image_binary)
-    resp.headers.set('Content-Type', k.mime)
+    if k:
+        resp.headers.set('Content-Type', k.mime)
     resp.headers.set('cache-control', 'max-age=31536000')
     return resp
 

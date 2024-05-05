@@ -22,13 +22,15 @@ class Manga():
     def get_file(self, file) -> bytes:
         if self._compress_type == 'application/zip':
             return get_zip_file(self._p, file)
+        if self._compress_type == 'application/tar':
+            return get_tar_file(self._p, file)
         elif self.is_dir:
             return get_dir_file(self._p, file)
 
     @property
     def get_cover_name(self) -> str:
         for x in self._file_list:
-            if x.__class__ == str and  "cover" in x:
+            if x.__class__ == str and "cover" in x:
                 return x
         return self._file_list[0]
 

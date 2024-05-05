@@ -4,13 +4,6 @@
     <meta charset="UTF-8">
     <title>{{ file }}</title>
 </head>
-<body>
-{% for image in images %}
-        <div class="div1">
-        <img src="/image/{{ file }}/{{ image }}" alt="{{ image }}" class="img" loading="lazy" ></img>
-        </div>
-        </br>
-{% endfor %}
 <style>
 <!--    img{height: auto; width: auto\9; width:100%; max-height: 100%;}-->
     .div1 {
@@ -27,7 +20,15 @@
         max-height: 100%;
         display: block;
         margin: auto;
+        min-height: 1px;
     }
 </style>
+<body>
+{% for image in images %}
+        <div class="div1">
+        <img src="/image/{{ file }}/{{ image }}" alt="{{ image }}" class="img" loading="lazy" ></img>
+        </div>
+        </br>
+{% endfor %}
 </body>
 </html>
