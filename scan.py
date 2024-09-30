@@ -1,10 +1,10 @@
-import dataclasses
 import os
 import tarfile
-from pathlib import Path
 import zipfile
-import filetype
+from pathlib import Path
 from pprint import pprint
+
+import filetype
 
 import config
 from config import support_archive_type, support_image_type, images_min_num
@@ -58,7 +58,7 @@ FILE_TYPE_IMPL = {
 }
 
 
-def filter_file_dirs(ps: list[Path]) -> list[Manga]:
+def filter_file_dirs(ps: list[Path]) -> dict[str, Manga]:
     def filter_file_list(file_list: list[str]) -> list[str]:
         image_cnt = 0
         for f in file_list:
@@ -73,7 +73,7 @@ def filter_file_dirs(ps: list[Path]) -> list[Manga]:
 
     def filter_file(p: Path) -> (bool, list[str], str):
         k = filetype.guess(p)
-        print(k.mime)
+        # print(k.mime)
         if k.mime in FILE_TYPE_IMPL.keys():
             ok, file_list = FILE_TYPE_IMPL[k.mime](p)
             if not ok:

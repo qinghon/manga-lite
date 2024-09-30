@@ -4,7 +4,7 @@ from image import *
 
 
 @dataclasses.dataclass
-class Manga():
+class Manga:
     _p: Path = None
     _file_list: list[str] = None
     is_dir = False
@@ -40,6 +40,9 @@ class Manga():
     def file_list(self):
         return self._file_list
 
+    @property
+    def filename(self):
+        return str(self._p)
     @property
     def ctime(self):
         return self._ctime
